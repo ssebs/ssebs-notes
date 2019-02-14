@@ -1,10 +1,24 @@
-.CodeMirror-linenumber {
-    padding: 1px 8px 0 5px;
-    color: #c8d2d7;
-    font-size: 10px;
+* {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
-.halfScreen {
-    width: 50%;
-    float: left;
+body {
+    height: 100vh;
+}
+
+
+.top {
+    height: 10vh;
+}
+.middle {
+    height: 80vh;
+}
+
+.bottom {
+    height: 10vh;
+}
+
+.ReactCodeMirror {
+    height: 100%;
 }

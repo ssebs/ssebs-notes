@@ -1,74 +1,84 @@
-import React, { Component } from 'react'
-import CodeMirror from 'react-codemirror'
-import { markdown } from 'markdown'
-import './App.scss'
-import '../node_modules/codemirror/lib/codemirror.css'
-import '../node_modules/codemirror/theme/darcula.css'
-import '../node_modules/codemirror/mode/markdown/markdown'
-import '../node_modules/codemirror/addon/display/autorefresh'
-import '../node_modules/codemirror/addon/edit/closebrackets'
-import '../node_modules/codemirror/addon/edit/continuelist'
+import React, { Component } from "react";
+import { markdown } from "markdown";
+import "./App.scss";
+// import CodeMirror from "@uiw/react-codemirror";
+import CodeMirror from "react-codemirror";
+import "codemirror/lib/codemirror.css";
+import "codemirror/keymap/sublime";
+import "codemirror/theme/darcula.css";
+import "codemirror/mode/markdown/markdown";
 
 class App extends Component {
+    constructor(props) {
+        super(props);
 
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      code: '# test\n',
-      renderedMD: '',
-      options: {
-        mode: 'markdown',
-        theme: 'darcula',
-        autofocus: true,
-        lineWrapping: true,
-        autoCloseBrackets: true,
-        highlightFormatting: true
-      }
+        this.state = {
+            code: "# test\n",
+            rendered: "",
+            options: {
+                theme: "darcula",
+                mode: "markdown",
+                lineNumbers: true
+            }
+        };
+        this.handleChange = this.handleChange.bind(this);
     }
-  }
 
-  updateCode (newCode) {
-    this.setState({
-      code: newCode,
-      renderedMD: markdown.toHTML(newCode)
-    })
-  }
+    componentDidMount() {
+        this.refs.editor.getCodeMirror().focus();
+        this.refs.editor
+            .getCodeMirror()
+            .setCursor(this.refs.editor.getCodeMirror().lineCount(), 0);
+        this.refs.editor.getCodeMirror().setSize("100%", "100%");
+        this.refs.editor.getCodeMirror().refresh();
+        this.handleChange(this.state.code);
+    }
 
-  componentDidMount () {
-    this.updateCode(this.state.code)
-  }
+    handleChange(newCode) {
+        this.setState({
+            rendered: markdown.toHTML(newCode)
+        });
+    }
 
-  handleSubmit () {
-    console.log(this.state.code)
-  }
-
-  render () {
-    return (
-      <div>
-        <h1>{this.state.title}</h1>
-        <div className='halfScreen'>
-          <h2>Editor</h2>
-          <CodeMirror
-            ref='editor'
-            value={this.state.code}
-            onChange={this.updateCode.bind(this)}
-            options={this.state.options} />
-        </div>
-        <div className='halfScreen'>
-          <h2>Output</h2>
-          <div dangerouslySetInnerHTML={{ __html: this.state.renderedMD }}>
-          </div>
-        </div>
-        <div style={{clear: 'both'}}></div>
-        <div style={{margin: 'auto', marginTop: '20px', textAlign: 'center'}}>
-          <button onClick={this.handleSubmit.bind(this)}>
-            Save!
-          </button>
-        </div>
-      </div>
-    )
-  }
+    render() {
+        return (
+            <div>
+                <div className='top'>
+                    <h1>Markdown Editor</h1>
+                    <hr />
+                </div>
+                <div
+                    style={{
+                        width: "50%",
+                        float: "left"
+                    }}
+                >
+                    <div className='middle'>
+                        <CodeMirror
+                            ref='editor'
+                            value={this.state.code}
+                            options={this.state.options}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                </div>
+                <div
+                    style={{
+                        width: "50%",
+                        float: "left"
+                    }}
+                >
+                    <div
+                        className='middle'
+                        dangerouslySetInnerHTML={{
+                            __html: this.state.rendered
+                        }}
+                    />
+                </div>
+                <div className='bottom'>Footer</div>
+            </div>
+        );
+    }
 }
 
-export default App
+export default App;
